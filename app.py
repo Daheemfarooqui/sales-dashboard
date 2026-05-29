@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📊 Sales Dashboard")
+st.title("📊 Finz Dashboard")
 
 # =====================================================
 # GOOGLE SHEET
