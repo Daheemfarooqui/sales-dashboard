@@ -17,9 +17,17 @@ st.title("📊 Sales Dashboard")
 # GOOGLE SHEET
 # =====================================================
 
-sh = gspread.service_account(
-    filename="credentials.json"
+from google.oauth2.service_account import Credentials
+
+creds = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=[
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
 )
+
+sh = gspread.authorize(creds)
 
 sa = sh.open(
     "best Copy of Hourly -  Report Summary - Offline/Online"
