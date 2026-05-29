@@ -260,12 +260,12 @@ st.dataframe(
 st.divider()
 
 with st.expander(
-    "📋 View Raw Data",
-    expanded=False
+    "📋 e-Mandate pending",
+    expanded=True
 ):
 
     st.write(
-        f"Total Rows: {len(raw_filtered):,}"
+        f"Total Pending Cases: {len(raw_filtered):,}"
     )
 
     st.dataframe(
