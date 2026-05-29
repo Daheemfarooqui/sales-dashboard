@@ -7,7 +7,7 @@ import gspread
 # =====================================================
 
 st.set_page_config(
-    page_title="Sales Dashboard",
+    page_title="Finz Dashboard",
     layout="wide"
 )
 
