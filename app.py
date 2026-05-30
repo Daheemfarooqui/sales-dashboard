@@ -230,6 +230,21 @@ summary_df["Admissions vs Loan Conversation %"] = (
     ) * 100
 ).round(0)
 
+def highlight_totals(row):
+
+    if "Grand Total" in str(row["RH"]):
+        return [
+            "background-color: #FFD700; color: black; font-weight: bold"
+        ] * len(row)
+
+    elif "Total" in str(row["RH"]):
+        return [
+            "background-color: #87CEEB; color: black; font-weight: bold"
+        ] * len(row)
+
+    else:
+        return [""] * len(row)
+
 # =====================================
 # RH TOTALS
 # =====================================
@@ -345,7 +360,10 @@ summary_df["FTD Loan Approved Vol."] = (
 st.subheader("📊 RH / ASM Summary Report")
 
 st.dataframe(
-    summary_df,
+    summary_df.style.apply(
+        highlight_totals,
+        axis=1
+    ),
     use_container_width=True,
     hide_index=True
 )
