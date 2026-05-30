@@ -232,17 +232,39 @@ summary_df["Admissions vs Loan Conversation %"] = (
 
 def highlight_totals(row):
 
+    styles = [""] * len(row)
+
+    rh_col = row.index.get_loc("RH")
+
     if "Grand Total" in str(row["RH"]):
-        return [
-            "background-color:#ff9800; color:white; font-weight:bold"
-        ] * len(row)
+
+        styles[rh_col] = (
+            "background-color:#ff9800;"
+            "color:white;"
+            "font-weight:bold;"
+        )
 
     elif "Total" in str(row["RH"]):
-        return [
-            "background-color:#1e88e5; color:white; font-weight:bold"
-        ] * len(row)
 
-    return [""] * len(row)
+        styles[rh_col] = (
+            "background-color:#1e88e5;"
+            "color:white;"
+            "font-weight:bold;"
+        )
+
+    return styles
+
+
+styled_df = summary_df.style.apply(
+    highlight_totals,
+    axis=1
+)
+
+st.dataframe(
+    styled_df,
+    use_container_width=True,
+    hide_index=True
+)
 
 # =====================================
 # RH TOTALS
