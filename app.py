@@ -255,16 +255,7 @@ def highlight_totals(row):
     return styles
 
 
-styled_df = summary_df.style.apply(
-    highlight_totals,
-    axis=1
-)
 
-st.dataframe(
-    styled_df,
-    use_container_width=True,
-    hide_index=True
-)
 
 # =====================================
 # RH TOTALS
@@ -380,11 +371,20 @@ summary_df["FTD Loan Approved Vol."] = (
 
 st.subheader("📊 RH / ASM Summary Report")
 
+def highlight_totals(row):
+
+    if "Total" in str(row["RH"]):
+        return ["font-weight:bold"] * len(row)
+
+    return [""] * len(row)
+
+styled_df = summary_df.style.apply(
+    highlight_totals,
+    axis=1
+)
+
 st.dataframe(
-    summary_df.style.apply(
-        highlight_totals,
-        axis=1
-    ),
+    styled_df,
     use_container_width=True,
     hide_index=True
 )
