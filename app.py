@@ -234,16 +234,15 @@ def highlight_totals(row):
 
     if "Grand Total" in str(row["RH"]):
         return [
-            "background-color: #FFD700; color: black; font-weight: bold"
+            "background-color:#ff9800; color:white; font-weight:bold"
         ] * len(row)
 
     elif "Total" in str(row["RH"]):
         return [
-            "background-color: #87CEEB; color: black; font-weight: bold"
+            "background-color:#1e88e5; color:white; font-weight:bold"
         ] * len(row)
 
-    else:
-        return [""] * len(row)
+    return [""] * len(row)
 
 # =====================================
 # RH TOTALS
