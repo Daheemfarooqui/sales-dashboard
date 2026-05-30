@@ -201,10 +201,6 @@ if "ASM Name" in raw_filtered.columns:
 # REPORT
 # =====================================================
 
-# =====================================================
-# GROUP BY RH + ASM
-# =====================================================
-
 summary_df = (
     df.groupby(
         ["RH", "ASM Name"],
@@ -227,11 +223,112 @@ summary_df.rename(
 )
 
 summary_df["Admissions vs Loan Conversation %"] = (
-    summary_df["FTD Loan Approved"]
-    /
-    summary_df["FTD Overall Admissions"].replace(0, 1)
-    * 100
+    (
+        summary_df["FTD Loan Approved"]
+        /
+        summary_df["FTD Overall Admissions"].replace(0, 1)
+    ) * 100
 ).round(0)
+
+# =====================================
+# RH TOTALS
+# =====================================
+
+final_rows = []
+
+for rh_name, group in summary_df.groupby("RH"):
+
+    final_rows.append(group)
+
+    rh_total = pd.DataFrame([{
+        "RH": f"{rh_name} Total",
+        "ASM Name": "",
+
+        "Number of Center":
+            group["Number of Center"].sum(),
+
+        "FTD Overall Admissions":
+            group["FTD Overall Admissions"].sum(),
+
+        "FTD Loan Punched":
+            group["FTD Loan Punched"].sum(),
+
+        "FTD Loan Approved":
+            group["FTD Loan Approved"].sum(),
+
+        "FTD Loan Approved Vol.":
+            group["FTD Loan Approved Vol."].sum(),
+
+        "Admissions vs Loan Conversation %":
+            round(
+                (
+                    group["FTD Loan Approved"].sum()
+                    /
+                    max(group["FTD Overall Admissions"].sum(), 1)
+                ) * 100,
+                0
+            )
+    }])
+
+    final_rows.append(rh_total)
+
+summary_df = pd.concat(
+    final_rows,
+    ignore_index=True
+)
+
+# =====================================
+# GRAND TOTAL
+# =====================================
+
+detail_rows = summary_df[
+    ~summary_df["RH"].str.contains(
+        "Total",
+        na=False
+    )
+]
+
+grand_total = pd.DataFrame([{
+    "RH": "Grand Total",
+    "ASM Name": "",
+
+    "Number of Center":
+        detail_rows["Number of Center"].sum(),
+
+    "FTD Overall Admissions":
+        detail_rows["FTD Overall Admissions"].sum(),
+
+    "FTD Loan Punched":
+        detail_rows["FTD Loan Punched"].sum(),
+
+    "FTD Loan Approved":
+        detail_rows["FTD Loan Approved"].sum(),
+
+    "FTD Loan Approved Vol.":
+        detail_rows["FTD Loan Approved Vol."].sum(),
+
+    "Admissions vs Loan Conversation %":
+        round(
+            (
+                detail_rows["FTD Loan Approved"].sum()
+                /
+                max(
+                    detail_rows["FTD Overall Admissions"].sum(),
+                    1
+                )
+            ) * 100,
+            0
+        )
+}])
+
+summary_df = pd.concat(
+    [summary_df, grand_total],
+    ignore_index=True
+)
+
+# =====================================
+# FORMAT
+# =====================================
 
 summary_df["Admissions vs Loan Conversation %"] = (
     summary_df["Admissions vs Loan Conversation %"]
